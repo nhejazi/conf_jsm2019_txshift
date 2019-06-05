@@ -93,7 +93,7 @@
         \includegraphics[scale=0.12]{homepage.png}
           \href{https://nimahejazi.org}{nimahejazi.org} \\
         \includegraphics[scale=0.12]{pdf-icon.png}
-        \href{https://bit.ly/2019\_bstars\_shift}{bit.ly/2019\_bstars\_shift} \\
+        \href{https://bit.ly/2019\_sfasa\_jsm}{bit.ly/2019\_sfasa\_jsm} \\
         {\scriptsize joint work with David Benkeser and Mark van der Laan}
     \end{minipage}%
     \begin{minipage}{0.35\textwidth}
@@ -103,7 +103,7 @@
   \end{figure}
 }
 
-\date{Thursday, 21 March 2019}
+\date{Wednesday, 05 June 2019}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -241,8 +241,9 @@
     \item Several different ways to consider stochastic interventions.
     \item Starts with Mark and Ivan's simple stochastic shift.
     \item Extensions to modified treatment policies.
-    \item The new value of $A$ may be denoted $A^* \sim G^*(\cdot \mid W)$,
-      where $A^* = d(W, U^*)$ for a rule $d$ and random error $U^*$.
+    \item The new value of $A$ may be denoted $A^{\star} \sim
+      G^{\star}(\cdot \mid W)$, where $A^{\star} = d(W, U^{\star})$ for a rule
+      $d$ and random error $U^{\star}$.
   \end{itemize}
 }
 
@@ -253,43 +254,7 @@
 \begin{frame}[c]{HIV-1 risk under stochastically shifted immune responses}
 
 \centering
-\includegraphics[scale=0.25]{shift-1}
-
-\note{
-}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[c,noframenumbering]{HIV-1 risk under stochastically shifted immune responses}
-
-\centering
-\includegraphics[scale=0.25]{shift-3}
-
-\note{
-}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[c,noframenumbering]{HIV-1 risk under stochastically shifted immune responses}
-
-\centering
-\includegraphics[scale=0.25]{shift-5}
-
-\note{
-}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[c,noframenumbering]{HIV-1 risk under stochastically shifted immune responses}
-
-\centering
-\includegraphics[scale=0.25]{shift-7}
+\animategraphics[loop,controls,scale=0.13]{10}{shift_animation-}{0}{6}
 
 \note{
 }
@@ -349,12 +314,32 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[c]{How does this help in fighting the HIV-1 epidemic?}
+\begin{frame}[c]{How does this help in fighting the HIV-1 epidemic? CD4+}
 
-\vspace{-1.5em}
+\vspace{-2em}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.17]{cd8_msm_tmle_summary}
+  \includegraphics[scale=0.21]{cd4_msm_tmle_summary}
+  \caption{
+    Analysis of HIV-1 risk as a function of CD4+ immunogenicity, using
+    \texttt{R} package \texttt{txshift}
+    (\url{https://github.com/nhejazi/txshift}.)
+  }
+\end{figure}
+
+\note{
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[c]{How does this help in fighting the HIV-1 epidemic? CD8+}
+
+\vspace{-2em}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.21]{cd8_msm_tmle_summary}
   \caption{
     Analysis of HIV-1 risk as a function of CD8+ immunogenicity, using
     \texttt{R} package \texttt{txshift}
@@ -386,7 +371,7 @@
 \begin{frame}[c]{Thank you.}
 
 \large
-Slides: \href{http://bit.ly/2019\_bstars\_shift}{bit.ly/2019\_bstars\_shift}
+Slides: \href{http://bit.ly/2019\_sfasa\_jsm}{bit.ly/2019\_sfasa\_jsm}
   \quad
 \includegraphics[height=4mm]{Figs/cc-zero.png}
 
@@ -406,4 +391,3 @@ Slides: \href{http://bit.ly/2019\_bstars\_shift}{bit.ly/2019\_bstars\_shift}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
-
