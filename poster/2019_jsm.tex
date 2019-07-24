@@ -19,13 +19,16 @@
 
 \usepackage{graphicx} % Required for including images
 \graphicspath{{figs/}} % Directory in which figures are stored
+\usepackage{float}
 
 \usepackage{amsmath} % For typesetting math
 \usepackage{amssymb} % Adds new symbols to be used in math mode
 \usepackage{mathtools}
 
 \usepackage[numbers]{natbib}
-
+\usepackage{caption}
+\usepackage{subcaption}
+%\usepackage{subfigure}
 \usepackage{booktabs} % Top and bottom rules for tables
 \usepackage{enumitem} % Used to reduce itemize/enumerate spacing
 \usepackage{palatino} % Use the Palatino font
@@ -86,49 +89,51 @@ linewidth=2pt % Width of the border lines around content boxes
 
 \begin{itemize}\compresslist
 \setlength\itemsep{0.75em}
-\item We consider the problem of efficiently estimating the effect of a
- stochastic shift interventions in studies with two-phase sampling of the
- treatment.
-\item We present an estimator of the average counterfactual outcome under a
-  stochastic shift intervention with
+\item We consider estimating the effect of a stochastic intervention in vaccine
+  trials with two-phase sampling of the treatment.
+\item We present efficient estimators of the mean counterfactual outcome under a
+  stochastic intervention with
   \begin{itemize}
     \item consistency and efficiency guarantees,
     \item a \textit{multiple} double robustness property.
   \end{itemize}
-\item The proposed estimator is asymptotically normal with a closed-form
-  variance estimator, thereby allowing for the construction of confidence
-  intervals and hypothesis tests.
-\item The \underline{\texttt{txshift} R package} \cite{hejazi2018txshift}
+\item The proposed estimators are asymptotically normal with a variance
+  estimator based on a well-studied efficient influence function.
+\item Our \texttt{txshift} \texttt{R} package~\cite{hejazi2019txshift}
   implements these estimators and leverages state-of-the-art machine learning in
   the procedure.
+\item Our \texttt{haldensify} \texttt{R} package~\cite{hejazi2019haldensify}
+  estimates the propensity score, a conditional density.
 \end{itemize}
-\vspace{0.65cm} % When there are two boxes, some whitespace may need to be added
-                % if the one on the right has more content
+\vspace{0.25cm} % When there are two boxes, some whitespace may need to be added
+               % if the one on the right has more content
 }
 
 %-------------------------------------------------------------------------------
 % INTRODUCTION
 %-------------------------------------------------------------------------------
 
-\headerbox{Data: HIV Vaccine Trials}
+\headerbox{HIV Vaccine Efficacy Trials}
 {name=introduction,column=1,row=0,bottomaligned=overview}{
 
 \begin{itemize}\compresslist
 \setlength\itemsep{0.5em}
-\item \underline{\textit{Question:}} \textbf{How does HIV infection risk vary
-  across shifts of an immunogenic response in the vaccine arm of a trial?}
+\item \underline{Question}: How does HIV infection risk vary with the shifting
+  of an immunogenic response profile in a trial's vaccine arm.
 \item Analysis of data from the HIV Vaccine Trials Network 505 efficacy trial,
   as in \cite{janes2017higher}:
   \begin{itemize}
     \itemsep0.25pt
-    \item Full RCT $n = 2504$ , with $n = 189$ in the second-stage sample.
-    \item Background $(W)$: sex, age, BMI, behavioral HIV risk score
-    \item Intervention $(A)$: post-vaccination CD4+/CD8+~immunogenic responses.
-    \item Outcome $(Y)$: HIV-1 infection status at week 28 of the trial.
-    \item All individuals infected by week 28 selected in second-stage sample.
+    \item RCT with $n = 2504$; only $n = 189$ from vaccine arm in second-stage
+      sample.
+    \item Background covariates $(W)$: sex, age, BMI, behavioral HIV risk score.
+    \item Treatment $(A)$: immunogenic response profiles, post-vaccination.
+    \item Outcome $(Y)$: HIV-1 infection status at week 28 of trial.
+    \item All individuals with HIV-1 infections by week 28 in second-stage
+      sample.
   \end{itemize}
-\item \underline{\textit{Goal:}} \textbf{Ranking of immune responses as
-    immunogenicity study endpoints in future HIV-1 vaccine efficacy trials.}
+\item \underline{Goal}: Develop a ranking of immunogenic responses as study
+  endpoints for future HIV-1 vaccine efficacy trials.
 \end{itemize}
 }
 
@@ -136,42 +141,42 @@ linewidth=2pt % Width of the border lines around content boxes
 % Methodology cont.
 %-------------------------------------------------------------------------------
 
-\headerbox{Methodology II: Corrections for Two-Phase Sampling}{name=results,
+\headerbox{Efficient Corrections for Two-Phase Sampling}{name=results,
   column=2,span=2,row=0}{
 
 \vspace{-0.35em}
 \begin{itemize}
 \itemsep0pt
-\item In the HVTN 505 HIV-1 trial, all infected participants and the matched
-  subset of controls have $A$ (immune markers) measured, thus making the
-  observed data structure \textbf{$O = (W, \Delta, \Delta A, Y) \sim P_0$}.
+\item In the HVTN 505 HIV-1 trial, immunogenic responses $A$ are sequenced for
+  infected individuals and a matched subset of controls, making
+  \textbf{$O = (W, \Delta, \Delta A, Y)$} the observed data structure.
   \vspace{-0.25em}
   \begin{itemize}
     \itemsep0pt
-    \item $\Delta \in \{0, 1\}$ is the missingness mechanism introduced
-      by sampling, under which the observed immune response ($\Delta A$) is
-      arbitrarily set to $0$ when unobserved.
-    \item We assume that, given $V \coloneqq (W, Y)$, $\Delta$ is Bernoulli
-      distributed with probability $\pi_0(V)$.
+    \item $\Delta \in \{0, 1\}$ is the sampling mechanism introduced by
+      two-phase sampling, under which the observed immunogenic response
+      ($\Delta A$) is arbitrarily set to $0$ when unobserved.
+    \item Given $V \coloneqq (W, Y)$, we assume that $\Delta \sim
+      \text{Bern}(\pi_0(V))$.
   \end{itemize}
-\item The IPCW-TMLE \cite{rose2011targeted2sd} estimates the target parameter by
+\item The IPCW-TMLE~\cite{rose2011targeted2sd} estimates the target parameter by
   adding \textit{inverse weights} to the loss function.
-\item Improvements in the efficiency are attainable using a TMLE based on the
-  augmented EIF:
+\item Efficiency improvements are attainable by constructing estimators based on
+  the augmented EIF:
   $$ D(P_0)(o) = \frac{\Delta}{\pi(v)} D^F(P_0^X)(x) - \left(1 -
     \frac{\Delta}{\pi(v)}\right)\mathbb{E}(D^F(P_0^X)(x) \mid \Delta = 1,
     V = v)$$
-\item This augmented estimator exhibits several desirable properties
+\item This augmentation allows the construction of estimators that
   \vspace{-0.25em}
   \begin{itemize}
     \itemsep0pt
-    \item \textit{efficiency}, achieving the CR bound for the class of regular
-      asymptotically linear estimators;
-    \item \textit{multiple robustness}, consistency of the parameter estimate
-      when one of $(g, Q)$ and one of $(\Pi, \mathbb{E}_0(D^F(P_0^X)(X) \mid
-      \Delta = 1, V))$ is consistently estimated;
-    \item valid statistical inference even when $\pi$ is estimated
-      nonparametrically.
+    \item achieve the efficiency bound for the class of regular asymptotically
+      linear estimators;
+    \item are \textit{multiply robust}, with consistency of parameter estimates
+      when one of $\{g, Q\}$ and one of $\{\pi_0(V), \mathbb{E}_0(D^F(P_0^X)(X)
+      \mid \Delta = 1, V)\}$ are consistently estimated;
+    \item allow valid statistical inference to be derived even when $\pi$ is
+      estimated nonparametrically.
   \end{itemize}
 \end{itemize}
 }
@@ -183,10 +188,10 @@ linewidth=2pt % Width of the border lines around content boxes
 \headerbox{\small References}{name=references,column=2,above=bottom}{
 \renewcommand{\section}[2]{\vskip 0.05em} % remove "References" section title
 \tiny{ % Reduce the font size in this block
-\setlength{\bibsep}{0.25pt}
+\setlength{\bibsep}{0.1pt}
 \bibliographystyle{plainnat}
-\nocite{*} % Insert publications even if they are not cited in the poster
-\bibliography{2019_bstars}
+%\nocite{*} % Insert publications even if they are not cited in the poster
+\bibliography{2019_jsm}
 \compresslist
 \vspace{-0.7em}
 }
@@ -201,11 +206,11 @@ linewidth=2pt % Width of the border lines around content boxes
 \begin{itemize}
   \itemsep0.25pt
   \item \textbf{N.~Hejazi}, Graduate Group in Biostatistics, UC Berkeley,
-    \textsc{nhejazi@berkeley.edu}
+    \texttt{nhejazi@berkeley.edu}
   \item \textbf{D.~Benkeser}: Asst.~Prof.~of Biostatistics, Emory University,
-    \textsc{benkeser@emory.edu}
+    \texttt{benkeser@emory.edu}
   \item \textbf{M.~van der Laan}, Prof.~of Biostatistics, UC Berkeley,
-    \textsc{laan@berkeley.edu}
+    \texttt{laan@berkeley.edu}
 \end{itemize}
 }
 
@@ -213,45 +218,35 @@ linewidth=2pt % Width of the border lines around content boxes
 % CONCLUSION
 %-------------------------------------------------------------------------------
 
-\headerbox{Results \& Discussion}
+\headerbox{Numerical Study \& Results}
 {name=conclusion,column=2,span=2,row=0,below=results,above=references}{
 
-\vspace{0.25em}
-
-\begin{multicols}{2}
-
-\begin{center}
-\vspace*{-0.5cm}
-\includegraphics[scale=0.37]{bias_composed_plot}
-%\captionof{figure}{This figure demonstrates...}
-\end{center}
-
-\begin{center}
-%\vspace*{-0.49cm}  % CHANGE THIS TO ALIGN IMAGES
-\includegraphics[scale=0.39]{rel_eff_composed_plot}
-%\captionof{figure}{This figure demonstrates...}
-\end{center}
-
-\vspace{-15pt}
-
-\begin{itemize}
-  \itemsep0pt
-  \item All estimators approx.~unbiased in large samples; however, inefficient
-    TMLE with HAL has bias not converging at $n^{-\frac{1}{2}}$ rate.
-  \item Fitting $\pi$ with HAL or GLM, efficient TMLE has lower variance than
-    the inefficient.\\
-\end{itemize}
-
-\end{multicols}
+\vspace{-1.25em}
+\begin{figure}[H]\label{fig:sim_results}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[scale=0.16]{bias_scaled}
+    \caption{Most estimator variants unbiased in large samples; inefficient
+      variants with HAL fail to converge.}
+    \label{fig:bias}
+  \end{subfigure}%
+  \hspace{1.5em}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[scale=0.16]{rel_eff}
+    \caption{Fitting $\pi$ with HAL or GLM, efficient estimators show
+      relative efficiency similar to simpler variants.}
+    \label{fig:efficiency}
+  \end{subfigure}
+\end{figure}
 }
 
 %-------------------------------------------------------------------------------
 % METHODS
 %-------------------------------------------------------------------------------
 
-\headerbox{Methodology I: The Effect of a Stochastic
-  Intervention}{name=method,column=0,span=2,below=overview,
-  bottomaligned=references}{
+\headerbox{The Effect of a Stochastic Treatment Regime}{name=method,column=0,
+  span=2,below=overview,bottomaligned=references}{
 % This block's bottom aligns with the bottom of the conclusion block
 
 \begin{itemize}
@@ -259,31 +254,30 @@ linewidth=2pt % Width of the border lines around content boxes
   \item Consider $X = (W, A, Y) \sim P_0^X \in \mathcal{M}$, where $W$ is a set
     of baseline covariates, $A$ a treatment, and $Y$ an outcome of interest,
     with no assumptions placed on the statistical model $\mathcal{M}$.
-  \item Consider a shift of the treatment (i.e., $d(A, W)$) so that
-    $A = A + \delta$ for a user-specified shift $\delta$.
-  \item To protect against violations of the assumption of positivity, the
-    shifting mechanism may be made a function of the observed data, where
-    $u(w)$ is the maximum shift with support in the data:
+  \item Consider a shift of the treatment $d(A, W) = A + \delta$ for a given
+    shift $\delta$. To protect against violations of the positivity assumption,
+    make the shifting mechanism a function of the observed data, where $u(w)$ is
+    the maximum shift supported in the observed data:
     \[ d(a, w) =
        \begin{cases}
          a + \delta, & a + \delta < u(w) \\
          a, & \text{otherwise}
        \end{cases}
     \]
-  \item The causal parameter is identified by the observed data parameter
-    \cite{munoz2012population}:
+  \item The causal parameter has been shown to be identified by a functional of
+    the observed data~\cite{munoz2012population}:
     \begin{equation}
       \Psi(P_0^X) = \mathbb{E}_{\text{P}_0}{\overline{Q}(d(A, W), W)},
     \end{equation}
     where $\overline{Q}(d(A, W), W)$ is the conditional mean of the outcome
     given $A = d(A,W)$ and $W$.
-  \item The efficient influence function (EIF) of $\Psi$ relative to a
-    nonparametric model is
+  \item The efficient influence function (EIF) of $\Psi$ relative to the
+    nonparametric model $\mathcal{M}$ is
         \begin{equation}
           D^F(P_0^X)(x) = H(a, w)({y - \overline{Q}(a, w)}) +
             \overline{Q}(d(a, w), w) - \Psi(P_0^X)(x),
         \end{equation}
-      where the auxiliary term, $H(a,w)$, may be expressed as
+      where the auxiliary covariate term $H(a,w)$ may be expressed as
         \begin{equation}
           H(a,w) = \mathbb{I}(a < u(w)) \frac{g(a - \delta \mid w)}{g(a \mid w)}
             + \mathbb{I}(a \geq u(w) - \delta).
