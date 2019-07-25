@@ -91,22 +91,19 @@ linewidth=2pt % Width of the border lines around content boxes
 \setlength\itemsep{0.75em}
 \item We consider estimating the effect of a stochastic intervention in vaccine
   trials with two-phase sampling of the treatment.
-\item We present efficient estimators of the mean counterfactual outcome under a
-  stochastic intervention with
-  \begin{itemize}
-    \item consistency and efficiency guarantees,
-    \item a \textit{multiple} double robustness property.
-  \end{itemize}
+\item We present robust, efficient estimators of the mean counterfactual outcome
+  under a stochastic intervention.
 \item The proposed estimators are asymptotically normal with a variance
-  estimator based on a well-studied efficient influence function.
+  estimator based on the efficient influence function.
 \item Our \texttt{txshift} \texttt{R} package~\cite{hejazi2019txshift}
   implements these estimators and leverages state-of-the-art machine learning in
   the procedure.
 \item Our \texttt{haldensify} \texttt{R} package~\cite{hejazi2019haldensify}
-  estimates the propensity score, a conditional density.
+  estimates a generalized propensity score (a conditional
+  density) via highly adaptive lasso (HAL).
 \end{itemize}
-\vspace{0.25cm} % When there are two boxes, some whitespace may need to be added
-               % if the one on the right has more content
+\vspace{0.75cm} % When there are two boxes, some whitespace may need to be added
+                % if the one on the right has more content
 }
 
 %-------------------------------------------------------------------------------
@@ -118,8 +115,8 @@ linewidth=2pt % Width of the border lines around content boxes
 
 \begin{itemize}\compresslist
 \setlength\itemsep{0.5em}
-\item \underline{Question}: How does HIV infection risk vary with the shifting
-  of an immunogenic response profile in a trial's vaccine arm.
+\item \underline{Question}: How does HIV infection risk vary across shifts of an
+  immunogenic response profile in a trial's vaccine arm.
 \item Analysis of data from the HIV Vaccine Trials Network 505 efficacy trial,
   as in \cite{janes2017higher}:
   \begin{itemize}
@@ -146,7 +143,7 @@ linewidth=2pt % Width of the border lines around content boxes
 
 \vspace{-0.35em}
 \begin{itemize}
-\itemsep0pt
+  \itemsep-2pt
 \item In the HVTN 505 HIV-1 trial, immunogenic responses $A$ are sequenced for
   infected individuals and a matched subset of controls, making
   \textbf{$O = (W, \Delta, \Delta A, Y)$} the observed data structure.
@@ -160,14 +157,17 @@ linewidth=2pt % Width of the border lines around content boxes
       \text{Bern}(\pi_0(V))$.
   \end{itemize}
 \item The IPCW-TMLE~\cite{rose2011targeted2sd} estimates the target parameter by
-  adding \textit{inverse weights} to the loss function.
+  incorporating inverse probability weights (of sampling) in the estimation of
+  the outcome regression and generalized propensity score.
 \item Efficiency improvements are attainable by constructing estimators based on
   the augmented EIF:
-  $$ D(P_0)(o) = \frac{\Delta}{\pi(v)} D^F(P_0^X)(x) - \left(1 -
-    \frac{\Delta}{\pi(v)}\right)\mathbb{E}(D^F(P_0^X)(x) \mid \Delta = 1,
-    V = v)$$
+  \begin{equation*}
+    D(P_0)(o) = \frac{\Delta}{\pi(v)} D^F(P_0^X)(X) - \left(1 -
+      \frac{\Delta}{\pi(v)}\right)\mathbb{E}(D^F(P_0^X)(x) \mid \Delta = 1,
+      V = v)
+  \end{equation*}
 \item This augmentation allows the construction of estimators that
-  \vspace{-0.25em}
+  \vspace{-0.5em}
   \begin{itemize}
     \itemsep0pt
     \item achieve the efficiency bound for the class of regular asymptotically
@@ -175,8 +175,8 @@ linewidth=2pt % Width of the border lines around content boxes
     \item are \textit{multiply robust}, with consistency of parameter estimates
       when one of $\{g, Q\}$ and one of $\{\pi_0(V), \mathbb{E}_0(D^F(P_0^X)(X)
       \mid \Delta = 1, V)\}$ are consistently estimated;
-    \item allow valid statistical inference to be derived even when $\pi_0$ is
-      estimated nonparametrically.
+    \item allow valid statistical inference even when $\pi_0$ is estimated
+      nonparametrically.
   \end{itemize}
 \end{itemize}
 }
@@ -234,8 +234,8 @@ linewidth=2pt % Width of the border lines around content boxes
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
     \includegraphics[scale=0.16]{rel_eff}
-    \caption{Fitting $\pi$ with HAL or GLM, efficient estimators show
-      relative efficiency similar to simpler variants.}
+    \caption{Fitting $\pi$ with HAL or GLM, efficient estimators and simpler
+      variants show comparable relative efficiency.}
     \label{fig:efficiency}
   \end{subfigure}
 \end{figure}
@@ -266,29 +266,27 @@ linewidth=2pt % Width of the border lines around content boxes
     \]
   \item The causal parameter has been shown to be identified by a functional of
     the observed data~\cite{munoz2012population}:
-    \begin{equation}
+    \begin{equation*}
       \Psi(P_0^X) = \mathbb{E}_{\text{P}_0}{\overline{Q}(d(A, W), W)},
-    \end{equation}
+    \end{equation*}
     where $\overline{Q}(d(A, W), W)$ is the conditional mean of the outcome
     given $A = d(A,W)$ and $W$.
   \item The efficient influence function (EIF) of $\Psi$ relative to the
     nonparametric model $\mathcal{M}$ is
-        \begin{equation}
-          D^F(P_0^X)(x) = H(a, w)({y - \overline{Q}(a, w)}) +
-            \overline{Q}(d(a, w), w) - \Psi(P_0^X)(x),
-        \end{equation}
-      where the auxiliary covariate term $H(a,w)$ may be expressed as
-        \begin{equation}
-          H(a,w) = \mathbb{I}(a < u(w)) \frac{g(a - \delta \mid w)}{g(a \mid w)}
-            + \mathbb{I}(a \geq u(w) - \delta).
-        \end{equation}
+    \begin{equation*}
+      D^F(P_0^X)(x) = H(a, w)({y - \overline{Q}(a, w)}) +
+        \overline{Q}(d(a, w), w) - \Psi(P_0^X)(x),
+    \end{equation*}
+    where the auxiliary covariate term $H(a,w)$ may be expressed as
+    \begin{equation*}
+      H(a,w) = \mathbb{I}(a < u(w)) \frac{g(a - \delta \mid w)}{g(a \mid w)}
+        + \mathbb{I}(a \geq u(w) - \delta).
+    \end{equation*}
 %We obtain Wald-style inference via the limiting distribution:
 %$\sqrt{n}(\Psi_n - \Psi) \to N(0, \text{Var}(D(P_0)))$.
 \end{itemize}
 }
 
 %-------------------------------------------------------------------------------
-
 \end{poster}
 \end{document}
-
