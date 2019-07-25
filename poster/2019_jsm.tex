@@ -143,30 +143,33 @@ linewidth=2pt % Width of the border lines around content boxes
 
 \vspace{-0.35em}
 \begin{itemize}
-  \itemsep-2pt
+\itemsep-2pt
 \item In the HVTN 505 HIV-1 trial, immunogenic responses $A$ are sequenced for
   infected individuals and a matched subset of controls, making
   \textbf{$O = (W, \Delta, \Delta A, Y)$} the observed data structure.
   \vspace{-0.25em}
   \begin{itemize}
     \itemsep0pt
-    \item $\Delta \in \{0, 1\}$ is the sampling mechanism introduced by
-      two-phase sampling, under which the observed immunogenic response
+    \item $\Delta \in \{0, 1\}$ is the censoring indicator introduced by the
+      two-phase sampling mechanism, under which observed immunogenic response
       ($\Delta A$) is arbitrarily set to $0$ when unobserved.
-    \item Given $V \coloneqq (W, Y)$, we assume that $\Delta \sim
-      \text{Bern}(\pi_0(V))$.
+    \item Given $V \coloneqq (W, Y)$, we assume $\Delta \sim
+      \text{Bern}(\pi_0(V))$ --- that is, $\pi_0(V) =
+      \mathbb{P}(\Delta = 1 \mid V)$.
   \end{itemize}
 \item The IPCW-TMLE~\cite{rose2011targeted2sd} estimates the target parameter by
-  incorporating inverse probability weights (of sampling) in the estimation of
-  the outcome regression and generalized propensity score.
-\item Efficiency improvements are attainable by constructing estimators based on
-  the augmented EIF:
+  incorporating inverse probability weights $\frac{\Delta}{\pi_n(V)}$ in the
+  estimation of the outcome regression and generalized propensity score.
+\item Efficiency improvements are attainable by constructing estimators from the
+  observed-data EIF:
   \begin{equation*}
     D(P_0)(o) = \frac{\Delta}{\pi(v)} D^F(P_0^X)(X) - \left(1 -
       \frac{\Delta}{\pi(v)}\right)\mathbb{E}(D^F(P_0^X)(x) \mid \Delta = 1,
       V = v)
-  \end{equation*}
-\item This augmentation allows the construction of estimators that
+  \vspace{-0.5em}
+  \end{equation*}%
+\item The observed-data EIF, based on full-data EIF $D^F(P_0^X)(X)$, allows
+  construction of estimators that
   \vspace{-0.5em}
   \begin{itemize}
     \itemsep0pt
@@ -174,7 +177,7 @@ linewidth=2pt % Width of the border lines around content boxes
       linear estimators;
     \item are \textit{multiply robust}, with consistency of parameter estimates
       when one of $\{g, Q\}$ and one of $\{\pi_0(V), \mathbb{E}_0(D^F(P_0^X)(X)
-      \mid \Delta = 1, V)\}$ are consistently estimated;
+      \mid \Delta = 1, V)\}$ are consistently estimated (e.g., via HAL);
     \item allow valid statistical inference even when $\pi_0$ is estimated
       nonparametrically.
   \end{itemize}
@@ -282,8 +285,6 @@ linewidth=2pt % Width of the border lines around content boxes
       H(a,w) = \mathbb{I}(a < u(w)) \frac{g(a - \delta \mid w)}{g(a \mid w)}
         + \mathbb{I}(a \geq u(w) - \delta).
     \end{equation*}
-%We obtain Wald-style inference via the limiting distribution:
-%$\sqrt{n}(\Psi_n - \Psi) \to N(0, \text{Var}(D(P_0)))$.
 \end{itemize}
 }
 
