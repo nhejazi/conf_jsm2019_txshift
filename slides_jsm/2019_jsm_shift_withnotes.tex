@@ -73,10 +73,9 @@
 \usepackage{natbib}
 \bibpunct{(}{)}{,}{a}{}{;}
 \usepackage{bibentry}
-
-\title{\normalsize Vaccine efficacy assessment under two-phase sampling based on
-  the causal effects of stochastic interventions}
-
+\title{\normalsize Robust inference on the causal effects of stochastic
+  interventions in two-phased vaccine efficacy trials}
+\subtitle{\small JSM 2019: Biometrics section contributed poster session}
 \author{\href{https://nimahejazi.org}{Nima Hejazi}\\[-10pt]}
 
 \institute{
@@ -93,7 +92,7 @@
         \includegraphics[scale=0.12]{homepage.png}
           \href{https://nimahejazi.org}{nimahejazi.org} \\
         \includegraphics[scale=0.12]{pdf-icon.png}
-        \href{https://bit.ly/2019\_jsm\_shift}{bit.ly/2019\_jsm\_shift} \\
+        \href{bit.ly/2019\_jsm\_shift}{bit.ly/2019\_jsm\_shift} \\
         {\scriptsize joint work with David Benkeser and Mark van der Laan}
     \end{minipage}%
     \begin{minipage}{0.35\textwidth}
@@ -103,7 +102,7 @@
   \end{figure}
 }
 
-\date{Wednesday, 05 June 2019}
+\date{Wednesday, 31 July 2019}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -314,18 +313,26 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[c]{How does this help in fighting the HIV-1 epidemic? CD4+}
+\begin{frame}[c]{Simulation study}
 
-\vspace{-2em}
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.21]{cd4_msm_tmle_summary}
-  \caption{
-    Analysis of HIV-1 risk as a function of CD4+ immunogenicity, using
-    \texttt{R} package \texttt{txshift}
-    (\url{https://github.com/nhejazi/txshift}.)
-  }
-\end{figure}
+\begin{center}
+\begin{itemize}
+  \itemsep6pt
+  \item Data-generating mechanism:
+    \begin{align*}
+      W_1 & \sim N(\mu = 3, \sigma^2 = 1);
+      W_2 \sim \text{Bern}(p = 0.6);
+      W_3 \sim \text{Bern}(p = 0.3) \\
+      A & \sim N(\mu = 2 \cdot (W_2 + W_3), \sigma^2 = 1) \\
+      Y & = \text{Bern}\left(p = \frac{W_1 + W_2 + W_3}{3} - A \right) \\
+      \Delta & = \text{Bern}\left(p = \frac{W_1 + W_2 + W_3}{3} - Y \right),
+    \end{align*}
+  \item Observed data $O = (W_1, W_2, W_3, \Delta, \Delta A, Y)$.
+  \item Four sample sizes: $n \in \{400, 900, 1600, 2500\}$.
+  \item Examine inefficient and efficient variants of the IPCW-AIPW and IPCW-TML
+    estimators.
+\end{itemize}
+\end{center}
 
 \note{
 }
@@ -334,14 +341,14 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[c]{How does this help in fighting the HIV-1 epidemic? CD8+}
+\begin{frame}[c]{Numerical results}
 
 \vspace{-2em}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.21]{cd8_msm_tmle_summary}
+  \includegraphics[scale=0.17]{bias_scaled}
   \caption{
-    Analysis of HIV-1 risk as a function of CD8+ immunogenicity, using
+    $\sqrt{n}$-scaled bias of IPCW-AIPW and IPCW-TML estimator variants, using
     \texttt{R} package \texttt{txshift}
     (\url{https://github.com/nhejazi/txshift}.)
   }
@@ -371,7 +378,7 @@
 \begin{frame}[c]{Thank you.}
 
 \large
-Slides: \href{http://bit.ly/2019\_jsm\_shift}{bit.ly/2019\_jsm\_shift}
+Slides: \href{bit.ly/2019\_jsm\_shift}{bit.ly/2019\_jsm\_shift}
   \quad
 \includegraphics[height=4mm]{Figs/cc-zero.png}
 
