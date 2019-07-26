@@ -92,7 +92,7 @@
         \includegraphics[scale=0.12]{homepage.png}
           \href{https://nimahejazi.org}{nimahejazi.org} \\
         \includegraphics[scale=0.12]{pdf-icon.png}
-        \href{bit.ly/2019\_jsm\_shift}{bit.ly/2019\_jsm\_shift} \\
+        \href{http://bit.ly/2O19\_jsm\_shift}{bit.ly/2019\_jsm\_shift} \\
         {\scriptsize joint work with David Benkeser and Mark van der Laan}
     \end{minipage}%
     \begin{minipage}{0.35\textwidth}
@@ -324,8 +324,9 @@
       W_2 \sim \text{Bern}(p = 0.6);
       W_3 \sim \text{Bern}(p = 0.3) \\
       A & \sim N(\mu = 2 \cdot (W_2 + W_3), \sigma^2 = 1) \\
-      Y & = \text{Bern}\left(p = \frac{W_1 + W_2 + W_3}{3} - A \right) \\
-      \Delta & = \text{Bern}\left(p = \frac{W_1 + W_2 + W_3}{3} - Y \right),
+      Y & = \text{Bern}\left(p = \text{logit}^{-1}
+        \left(\frac{W_1 + W_2 + W_3}{3} - A \right) \right) \\
+      \Delta & = \text{Bern}\left(p = \text{logit}^{-1}(W_2 + Y) \right),
     \end{align*}
   \item Observed data $O = (W_1, W_2, W_3, \Delta, \Delta A, Y)$.
   \item Four sample sizes: $n \in \{400, 900, 1600, 2500\}$.
@@ -348,9 +349,9 @@
   \centering
   \includegraphics[scale=0.17]{bias_scaled}
   \caption{
-    $\sqrt{n}$-scaled bias of IPCW-AIPW and IPCW-TML estimator variants, using
+    $\sqrt{n}$-scaled bias of IPCW estimator variants, using
     \texttt{R} package \texttt{txshift}
-    (\url{https://github.com/nhejazi/txshift}.)
+    (\url{https://github.com/nhejazi/txshift}).
   }
 \end{figure}
 
@@ -378,8 +379,7 @@
 \begin{frame}[c]{Thank you.}
 
 \large
-Slides: \href{bit.ly/2019\_jsm\_shift}{bit.ly/2019\_jsm\_shift}
-  \quad
+Slides: \href{http://bit.ly/2O19\_jsm\_shift}{bit.ly/2019\_jsm\_shift} \quad
 \includegraphics[height=4mm]{Figs/cc-zero.png}
 
 \vspace{2mm}
